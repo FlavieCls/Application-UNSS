@@ -7,6 +7,9 @@ if(isset($_SESSION['idCompte'])) {
 			<!-- nom de la page -->
 			<TITLE>Importation des données</TITLE>
 			<meta charset="utf-8" />
+
+                        <!-- permet de forcer le déréférencement -->
+                        <META NAME="ROBOTS" content="none,noarchive">
 			
 			<!--Import Google Icon Font-->
 			<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -22,7 +25,7 @@ if(isset($_SESSION['idCompte'])) {
 			<!-- insertion de l'en-tête contenant le logo et le mennu de navigation -->
 			<?php include('../include/header.php'); ?>
 
-			<div class="container color bodyImport">
+			<div class="container color bodyImport page">
 				<div class="row center">
 					<!-- titre de la page -->
 					<h1 id="titre">Importation des données</h1>
@@ -30,8 +33,8 @@ if(isset($_SESSION['idCompte'])) {
 				<div class="row center">
 					<!-- message d'avertissement si problème lors de l'upload du fichier -->
 					<?php
-					if(isset($_GET['info'])) {
-						echo $_GET['info'];
+					if(isset($_SESSION['info'])) {
+						echo $_SESSION['info'];
 					}
 					?>
 				</div>
@@ -47,12 +50,12 @@ if(isset($_SESSION['idCompte'])) {
 						<!-- consigne d'utilisation du drag and drop qui évolu lorsque un fichier et chargé -->
 						<div class="center lblFichCSV">
 							<i class="material-icons white-text large">backup</i>
-							<p id="lblFichCSV">Sélectionner un fichier ou déposez le ici.</p>
+							<p id="lblFichCSV">Sélectionner un fichier ou déposer le ici.</p>
 						</div>
 
 						<!-- bouton de validation du formulaire -->
-						<div class="center btnUpload" id="btnUpload">
-							<button class="btn waves-effect waves-light btnUpload" type="submit" name="actionV">Télécharger</button>
+						<div class="center btnLarge" id="btnUpload">
+							<button class="btn waves-effect waves-light btnLarge" type="submit" name="actionV">Télécharger</button>
 						</div>
 					</form>
 				</div>
@@ -78,7 +81,7 @@ if(isset($_SESSION['idCompte'])) {
 				// Changement du text de la zone de drag and drop lorsqu'un fichier a été 'dropé'
 				$(document).ready(function(){
 					$('form input').change(function () {
-						$('#lblFichCSV').text(this.files.length + " file(s) selected");
+						$('#lblFichCSV').text(this.files.length + " fichier sélectionné");
 					});
 				});
 			</script>
@@ -88,4 +91,4 @@ if(isset($_SESSION['idCompte'])) {
 } else {
 	header('Location: ../index.php');
 }
-?>
+?>	

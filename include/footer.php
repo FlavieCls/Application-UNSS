@@ -1,5 +1,5 @@
 <!-- pieds de page du site -->
-<footer class="page-footer blue">
+<footer class="page-footer blue footer">
 	<div class="container">
 		<!-- ligne 1 -->
 		<div class="row">
@@ -11,8 +11,8 @@
 			<div class="col l4 offset-l2 s12">
 				<h5 class="white-text">Liens</h5>
 				<ul>
-					<li><a class="grey-text text-lighten-3" href="http://unss.org/!">UNSS.org</a></li>
-					<li><a class="grey-text text-lighten-3" href="https://www.facebook.com/UNSSAveyron/!">Facebook Aveyron</a></li>
+					<li><a class="grey-text text-lighten-3" href="http://unss.org/" target="_blank">UNSS.org</a></li>
+					<li><a class="grey-text text-lighten-3" href="https://www.facebook.com/UNSSAveyron/" target="_blank">Facebook UNSS Aveyron</a></li>
 				</ul>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 	<!-- copyright -->
 	<div class="footer-copyright">
 		<div class="container">
-			© 2017 Copyright Text
+			© 2017 Copyright INNO'GRAF
 		</div>
 	</div>
 </footer>

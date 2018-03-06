@@ -1,5 +1,6 @@
 ﻿<?php session_start(); 
 if(isset($_SESSION['idCompte'])) {
+        $_SESSION['info'] = "";
 ?>
 	<!DOCTYPE html>
 	<html>
@@ -7,6 +8,9 @@ if(isset($_SESSION['idCompte'])) {
 			<!-- nom de la page -->
 			<TITLE>Trie des données</TITLE>
 			<meta charset="utf-8" />
+
+                        <!-- permet de forcer le déréférencement -->
+                        <META NAME="ROBOTS" content="none,noarchive">
 			
 			<META NAME="Description" CONTENT="UNSS Aveyron - Trie des données">
 			
@@ -26,6 +30,7 @@ if(isset($_SESSION['idCompte'])) {
 			include('../include/header.php');
 			include "bd.inc.php";
 			include "affichage.inc.php";
+			
 			?>
 			
 		  
@@ -46,8 +51,8 @@ if(isset($_SESSION['idCompte'])) {
 							<fieldset>
 								<legend>Choix du sport</legend> <!-- Titre du fieldset --> 
 								<p class="center choixSelect">Sélectionnez un sport :</p>
-								
 								<?php $tab = array();
+								$donneesManquante = 0;
 								$tab = recupererSport();
 								listeDeroulante($tab, "sport"); ?>
 								<br/>
@@ -58,12 +63,18 @@ if(isset($_SESSION['idCompte'])) {
 							<fieldset>	
 								<legend>Choix de la catégorie</legend> <!-- Titre du fieldset --> 
 								<p class="center choixSelect">Sélectionnez une catégorie :</p>
-								<br />
 								<?php
 								$tab = recupererCategorie();
-								afficheTableau($tab, "cat");
+								if(!empty($tab)) {
+									echo "<p class=\"center choixSelect infoSmallBlue\">(Par défaut, s'il n'y a aucune catégorie de cochée, on recherchera toutes les catégories en lien avec le sport choisit.)</p>";
+									echo "<br/>";
+									afficheTableauCheckBox($tab, "cat");
+								} else {
+									$donneesManquante++;
+									echo "<p class=\"center\">Il n'y a auncune catégorie d'enregistrée dans la base de données.<br/>Merci d'importer un premier fichier pour pouvoir trier.</p>";
+								}
 								?>
-								
+								<br />
 							</fieldset>	
 								<br />
 								<br />
@@ -71,32 +82,49 @@ if(isset($_SESSION['idCompte'])) {
 							<fieldset>		
 								<legend>Choix de l'établissement</legend>
 								<p class="center choixSelect">Sélectionnez une catégorie d'établissement :</p>
-								<br />
 								<?php
 								$tab = recupererTypeEtablissement();
-								afficheTableau($tab, "typeEtab");
+								if(!empty($tab)) {
+									echo "<p class=\"center choixSelect infoSmallBlue\">(Par défaut, s'il n'y a aucun type d'établissement de coché, on recherchera touts les types d'établissement en lien avec le sport choisit.)</p>";
+									echo "<br/>";
+									afficheTableauCheckBox($tab, "typeEtab");
+								} else {
+									$donneesManquante++;
+									echo "<p class=\"center\">Il n'y a auncun type d'établissement d'enregistré dans la base de données.<br/>Merci d'importer un premier fichier pour pouvoir trier.</p>";
+								}
 								?>
-									
-								<br />
 								<br />
 							</fieldset>	
 								<br />
 								<br/>
-								<button class="btn waves-effect waves-light" type="submit" name="action">Valider</button>
+								<?php
+								// s'il n'y a pas de données dans la BD, on informe l'utilisateur qu'il doit d'abord importer un fichier
+								if($donneesManquante != 0) echo "<p class=\"center red-text\">Vous devez importer des données avant de pouvoir effectuer un tri sur celles-ci.</p>";
+								?>
+								<button class="btn waves-effect waves-light" type="submit" name="action" 
+								<?php
+								if($donneesManquante != 0) echo "disabled";
+								?>>Valider</button>
 						</form>
 					<?php
 					} else {
+						
+						// on vérifie la présence des valeurs retournées
+						$sport = isset($_POST['sport'])?$_POST['sport']:1;
+						$cat = isset($_POST['cat'])?$_POST['cat']:1;
+						$typeEtab = isset($_POST['typeEtab'])?$_POST['typeEtab']:1;
+						
+						
 						// sinon on affiche le résultat du tri
+						$result = chercheDonnees($sport, $cat, $typeEtab);
+						afficheResultatTableau($result);
 						?>
-						<div class="row center">
-							<p>Section en cours de réalisation</p>
-						</div>
 						<?php
 					}
 					?>
 				</div>	
 			</div>	
-				<?php include('../include/footer.php'); ?>
+			<?php include('../include/footer.php'); ?>
 		</body>
 			
 	</html>

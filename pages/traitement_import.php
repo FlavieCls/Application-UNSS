@@ -1,6 +1,7 @@
 <?php session_start();
 if(isset($_SESSION['idCompte']))
 {
+        $_SESSION['info'] = "";
 	$info = '';
 	$extension_upload = '';
 	$chemin = '../fichier/';
@@ -34,12 +35,13 @@ if(isset($_SESSION['idCompte']))
 			}
 		} else {
 			// Sinon on informe l'administrateur que le fichier est trop lourd
-			$info .= "<p class=\"red-text\">Le fichier uploadée est tros lourde.</br>La limite est fixé à 10 Mo.</p>";
+			$info .= "<p class=\"red-text\">Le fichier uploadé est trop lourd.</br>La limite est fixé à 10 Mo.</p>";
 		}
 	} else {
 		$info .= "<p class=\"red-text\">Merci de télécharger un fichier avant de valider.</p>";
 	}
-	header('Location: ajoutFichier.php?info='.$info.'');
+        $_SESSION['info'] = $info;
+	header('Location: ajoutFichier.php');
 } else {
 	header('Location: ../index.php');
 }

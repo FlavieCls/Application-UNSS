@@ -1,12 +1,18 @@
+<?php
+session_start(); // On démarre une session
+?>
 <!DOCTYPE html>
 <html id="page">
 	<head>
 		<!-- nom de la page -->
 		<TITLE>Connexion</TITLE>
 		<meta charset="utf-8" />
+                <!-- permet de forcer le déréférencement -->
+                <META NAME="ROBOTS" content="none,noarchive">
 		
 		<!--Import Google Icon Font-->
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 		<!--Import materialize.css-->
 		<link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
 		<link type="text/css" rel="stylesheet" href="css/style.css"/>
@@ -36,8 +42,8 @@
 							<p class="center">Connectez-vous pour accéder à l'application</p>
 							<!-- Affichage du message d'erreur si une erreur est présente -->
 							<?php
-							if(isset($_GET['avertissement'])) {
-								echo $_GET['avertissement'];
+							if(isset($_SESSION['avertissement'])) {
+								echo $_SESSION['avertissement'];
 							}
 
 							?>
@@ -65,7 +71,7 @@
 						<div class="input-field center col m4 s12">
 							<input type="password" name="password" id="password" class="validate" required>
 							<label for="password">Mot de passe</label>
-							<a href="#">Mot de passe oublié ?</a>
+							<a href="pages/oublieMotDePasse.php">Mot de passe oublié ?</a>
 						</div> 
 						<div class="input-field col m4 s0">
 						</div>
@@ -88,4 +94,4 @@
 		</div>
 
 	</body>
-</html>
+</html>	

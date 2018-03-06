@@ -1,4 +1,5 @@
 <?php
+        session_start();
 	// Vérification de l'existence du compte
 	try
 	{
@@ -23,16 +24,17 @@
 	if(!$resultat || !password_verify($password, $resultat['password']))
 	{
 		// on en informe l'utilisateur et on redirige vers la page de connexion
-		$avertissement= "<p class=\"center deep-orange-text darken-1\">Le mail ou le mot de passe est incorrect.</p>";
+                $_SESSION['avertissement'] = "<p class=\"center deep-orange-text darken-1\">Le mail ou le mot de passe est incorrect.</p>";
 		$req->closeCursor();
-		header('Location: ../index.php?avertissement='.$avertissement.'');
+		header('Location: ../index.php');
 	}else{
 		// sinon on démarre une session et on lui affecte les données de l'utilisateur courant puis on reidirge vers la page d'accueil
-		session_start();
 		$_SESSION['idCompte']=$resultat['idCompte'];
 		$_SESSION['nom']=$resultat['nom'];
 		$_SESSION['prenom']=$resultat['prenom'];
 		$_SESSION['email']=$resultat['email'];
+                $_SESSION['avertissement'] = "";
+                $_SESSION['info'] = "";
 		$req->closeCursor();
 		header('Location: accueil.php');
 	}

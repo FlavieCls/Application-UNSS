@@ -6,7 +6,7 @@ function connectBD() {
 	try
 	{
 		// connexion à la bd
-		$bdd = new PDO('mysql:host=localhost; dbname=unss; charset=utf8', 'root', 'root');
+		$bdd = new PDO('mysql:host=localhost;dbname=unss;charset=utf8', 'root', 'root');
 		$bdd->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 		return $bdd;
 	} catch (Exception $e) {
@@ -95,35 +95,40 @@ function traitFich($nomFichier) {
 		$i = 0;
 		// ligne suivante du tableau des équipes
 		$m = 0;
+		
 		foreach($csv as $ligne) {
-			
-			// on ne prend pas en compte la première ligne du fichier csv
-			if($i != 0 && !empty($ligne[0])) {
-				// on insère le type d'établissement dans le tableau adéquat
-				$tabTypeEtab[$i-1] = $ligne[1];
-				// on insère la catégorie dans le tableau adéquat
-				$tabCategorie[$i-1] = $ligne[$indiceMax];
-				// on insère l'établissementdans dans le tableau adéquat
-				$tabEtab[$i-1] = array($ligne[0], $ligne[1], $ligne[2], $ligne[3], $ligne[4], $ligne[5], $ligne[6], $ligne[7], $ligne[8], $ligne[9], $ligne[10], $ligne[11], $ligne[12], $ligne[13], $ligne[14], $ligne[15], $ligne[16]);
-				
-				// numéro de la colonne de sport correspondant à l'identifiant du sport
-				$j = 1;
-				// on insère les équipes de chaque ligne dans le tableau adéquat
-				for($k = 17; $k < 24; $k++) {
-					$tabEquipe[$m] = array($ligne[0], $ligne[$indiceMax], (int)$j, $ligne[$k]);
-					$m++;
-					$j++;
+			// si le fichier est vide on informe l'utilisateur
+			if($i == 0 && empty($ligne[0])) {
+				$info .= "<p class=\"center red-text\">Vous avez uploadé un fichier vide.<br/>Merci d'uploader un fichier non vide.</p>";
+			} else {
+				// on ne prend pas en compte la première ligne du fichier csv
+				if($i != 0 && !empty($ligne[0])) {
+					// on insère le type d'établissement dans le tableau adéquat
+					$tabTypeEtab[$i-1] = $ligne[1];
+					// on insère la catégorie dans le tableau adéquat
+					$tabCategorie[$i-1] = $ligne[$indiceMax];
+					// on insère l'établissementdans dans le tableau adéquat
+					$tabEtab[$i-1] = array($ligne[0], $ligne[1], $ligne[2], $ligne[3], $ligne[4], $ligne[5], $ligne[6], $ligne[7], $ligne[8], $ligne[9], $ligne[10], $ligne[11], $ligne[12], $ligne[13], $ligne[14], $ligne[15], $ligne[16]);
+					
+					// numéro de la colonne de sport correspondant à l'identifiant du sport
+					$j = 1;
+					// on insère les équipes de chaque ligne dans le tableau adéquat
+					for($k = 17; $k < 24; $k++) {
+						$tabEquipe[$m] = array($ligne[0], $ligne[$indiceMax], (int)$j, $ligne[$k]);
+						$m++;
+						$j++;
+					}
+					
+					// on insère les contraintes dans le tableau adéquat
+					$tabContrainte[$i-1] = array($ligne[0], $ligne[$indiceMax], $ligne[24], $ligne[25], $ligne[26], $ligne[27]);
+					
+				} else {
+					// indice max qui correspond à la colonne des catégories
+					$indiceMax = count($ligne) - 1;
 				}
 				
-				// on insère les contraintes dans le tableau adéquat
-				$tabContrainte[$i-1] = array($ligne[0], $ligne[$indiceMax], $ligne[24], $ligne[25], $ligne[26], $ligne[27]);
-				
-			} else {
-				// indice max qui correspond à la colonne des catégories
-				$indiceMax = count($ligne) - 1;
+				$i++;
 			}
-			
-			$i++;
 		}
 		
 		// on supprime les catégories qui sont en doubles
@@ -154,7 +159,7 @@ function traitFich($nomFichier) {
 		return $info;
 		
 	} catch(Exception $e) {
-		$info .= "<p class=\"center\">Erreur lors du traitement du fichier.</p>";
+		$info .= "<p class=\"center red-text\">Erreur lors du traitement du fichier.</p>";
 		return $info;
 	}
 	
@@ -215,7 +220,7 @@ function insertionCategorie($tabCat) {
 		return $info;
 		
 	} catch(Exception $e) {
-		$info .=  "<p class=\"center\">Impossible de communiquer avec la base de données (catégorie).</p>";
+		$info .=  "<p class=\"center red-text\">Impossible de communiquer avec la base de données (catégorie).</p>";
 		return $info;
 	}
 }
@@ -283,7 +288,7 @@ function insertionTypeEtablissement($tabTypeEtab) {
 		return $info;
 		
 	} catch(Exception $e) {
-		$info .=  "<p class=\"center\">Impossible de communiquer avec la base de données (type établissement).</p>";
+		$info .=  "<p class=\"center red-text\">Impossible de communiquer avec la base de données (type établissement).</p>";
 		return $info;
 	}
 	
@@ -378,7 +383,7 @@ function insertionEtablissement($tabEtab) {
 		return $info;
 		
 	} catch(Exception $e) {
-		$info .=  "<p class=\"center\">Impossible de communiquer avec la base de données (établissement).</p>";
+		$info .=  "<p class=\"center red-text\">Impossible de communiquer avec la base de données (établissement).</p>";
 	}
 }
 
@@ -449,7 +454,7 @@ function insertionEquipe($tabEquipe) {
 		return $info;
 		
 	} catch(Exception $e) {
-		$info .= "<p class=\"center\">Impossible de communiquer avec la base de données (équipe).</p>";
+		$info .= "<p class=\"center red-text\">Impossible de communiquer avec la base de données (équipe).</p>";
 		return $info;
 	}
 }
@@ -524,7 +529,7 @@ function insertionContrainte($tabContrainte) {
 		return $info;
 		
 	} catch(Exception $e) {
-		$info .= "<p class=\"center\">Impossible de communiquer avec la base de données (contrainte).</p>";
+		$info .= "<p class=\"center red-text\">Impossible de communiquer avec la base de données (contrainte).</p>";
 		return $info;
 	}
 }
@@ -595,14 +600,14 @@ function recupererCategorie() {
 		$bdd = connectBD();
 		
 		/* exécution d'une requete */
-		$categorie=$bdd->query("SELECT idCategorie, nomCategorie FROM categorie"); // on va chercher tous les membres de la table 
+		$categorie=$bdd->query("SELECT nomCategorie FROM categorie"); // on va chercher tous les membres de la table 
 		
 		
 		$tab = array();
 		$i = 0;
 		// on range les résultats dans un tableau
 		while($cell =$categorie->fetch()) {
-			$tab[$i] = array($cell['idCategorie'], $cell['nomCategorie']);
+			$tab[$i] = $cell['nomCategorie'];
 			$i++;
 		}
 		/* 	on a terminé alors on ferme le curseur */
@@ -625,13 +630,13 @@ function recupererTypeEtablissement() {
 		$bdd = connectBD();
 		
 		/* exécution d'une requete */
-		$typeEtab=$bdd->query("SELECT idType, codeTypeEtablissement FROM typeetablissement "); // on va chercher tous les membres de la table 
+		$typeEtab=$bdd->query("SELECT codeTypeEtablissement FROM typeetablissement "); // on va chercher tous les membres de la table 
 
 		$tab = array();
 		$i = 0;
 		// on range les résultats dans un tableau
 		while($cell =$typeEtab->fetch()) {
-			$tab[$i] = array($cell['idType'], $cell['codeTypeEtablissement']);
+			$tab[$i] = $cell['codeTypeEtablissement'];
 			$i++;
 		}
 		/* 	on a terminé alors on ferme le curseur */
@@ -649,37 +654,371 @@ function recupererTypeEtablissement() {
 /*
  * permet de chercher toutes les données correspondantes aux critères de l'utilisateur
  */
-/*function chercheDonnees($sport, $cat, $typeEtab) {
+function chercheDonnees($sport, $cat, $typeEtab) {
 	try {
-		
 		$bdd = connectBD();
 		
 		// requête pour extraire certaine données
-		$sql = "SELECT nomEtablissement, nomSport, nomCategorie, nbEquipe FROM equipe JOIN etablissement ON numEtablissement = codeAS JOIN sport ON numSport = idSport JOIN categorie ON numCategorie = idCategorie";
+		$sql = "SELECT E.nomEtablissement, S.nomSport, C.nomCategorie, T.nbEquipe FROM equipe T JOIN etablissement E ON T.numEtablissement = E.codeAS JOIN typeetablissement TE ON E.numTypeEtablissement = TE.idType JOIN sport S ON T.numSport = S.idSport JOIN categorie C ON T.numCategorie = C.idCategorie";
 		$condition = "WHERE";
 		$order = "ORDER BY nomEtablissement";
 		$critSport = "";
-		$critCat = "";
-		$critTypeEtab = "";
+		$listeCat ="";
+		$listeTypeEtab = "";
 		$crit = "";
 		
+		
+		// si l'utilisateur a sélectionné un sport
 		if($sport != "vide") {
-			$critSport = "idSport LIKE ".$sport;
+			// on créé la condition sur le sport
+			$critSport = "idSport = ".$sport;
 			
-			if(!empty($cat)) {
-				
-			} else {
-				return 1;
+			if(is_array($cat)) {
+				// si l'utilisateur a sélectionné une ou plusieurs catégories
+				if(count($cat) > 0) {
+					// on créé la liste des catégories
+					$listeCat = "AND nomCategorie IN ( '".$cat[0]."'";
+					for($i = 1; $i < count($cat); $i++) {
+						$listeCat .= ", '".$cat[$i]."'";
+					}
+					$listeCat .= ")";
+				} else {
+					return 1;
+				}
+			}
+			
+			if(is_array($typeEtab)) {
+				// si l'utilisateur a sélectionné un ou plusieurs type d'établissement
+				if(count($typeEtab) > 0) {
+					// on créé la liste des types d'établissement
+					$listeTypeEtab = "AND TE.codeTypeEtablissement IN ( '".$typeEtab[0]."'";
+					for($i = 1; $i < count($typeEtab); $i++) {
+						$listeTypeEtab .= ", '".$typeEtab[$i]."'";
+					}
+					$listeTypeEtab .= ")";
+				} else {
+					return 1;
+				}
 			}
 			
 		} else {
 			return 1;
 		}
+		// on construit la requête
+		$sql .= " ".$condition." ".$critSport." ".$listeCat."  ".$listeTypeEtab;
+		
+		// on exécute la requête
+		$result = $bdd->query($sql);
+		$i = 0;
+		$tab = array();
+		while($ligne = $result->fetch()) {
+			for($j = 0; $j < sizeof($ligne)/2; $j++) {
+				$tab[$i][$j] = $ligne[$j];
+			}
+			$i++;
+		}
+		// on ferme le curseur
+		$result->closeCursor();
+		
+		// on retourne le tableau de valeur
+		return $tab;
+		
 		
 	} catch(Exception $e) {
+		die('Erreur : ' . $e->getMessage());
 		echo "Erreur lors de la recherche des données correspondantes aux critères de sélection";
 	}
+}
+
+
+
+/*
+ * Permet de mettre à jour le compte de l'utilisateur courant
+ */
+function majCpt($tab) {
+	$info = '';  // message
+	$rqt = "UPDATE compte SET";
+	$maj = "nom = '".$tab[0]."' , prenom = '".$tab[1]."' , email = '".$tab[2]."'";
+	$condition = "WHERE idCompte = '".$_SESSION['idCompte']."'";
 	
+	try {
+		$bdd = connectBD();
+		
+		if(!empty($tab[3])) {
+			$maj .= " , password = '".$tab[3]."'";
+		}
+		// on construit la requête SQL
+		$rqt = $rqt." ".$maj." ".$condition;
+		// on met à jour les données
+		$req = $bdd->query($rqt);
+		// on informe l'utilisateur du succès de l'opération
+		$info .= "<p class=\"center red-text\">Mise à jour de vos données réussie</p>";
+		return $info;
+		
+	} catch(Exception $e) {
+		$info .= "<p class=\"center red-text\">Erreur lors de la mise à jour de vos données.<br/>Merci de réessayer plus tard.</p>";
+		return $info;
+	}
 	
-}*/
+}
+
+
+/* On récupere les email de la table dans la base de données */
+function recupEmail() {
+	try {
+		// connexion à la bd
+		$bdd = connectBD();
+		/* exécution d'une requete */
+		$email=$bdd->query('SELECT email FROM compte'); // on va chercher tous les emails des comptes
+		
+		/* declaration du mode de récupération pour le curseur */
+		$email->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
+		// indice de la case du tableau
+		$i = 0;
+		// on stock dans un tableau l'ensemble des emails présent dans la BdD
+		while($unMail = $email->fetch()) {
+			$tabEmail[$i] = $unMail->email;
+		}
+		
+		/* on retourne tout les emails*/
+		return $tabEmail;
+	
+	} catch (Exception $err) {
+		echo "Erreur il est impossible de récuperer les mails des comptes" ;
+	}
+	/* 	on a terminé alors on ferme le curseur */
+	$email->closeCursor();	
+
+}
+
+/*
+ * permet de récupérer les email dans la BD pour la modification des utilisateurs
+ */
+function recupererMail() {
+	try {
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		/* exécution d'une requete */
+		$mail=$bdd->query("SELECT email FROM compte"); // on va chercher tous les membres de la table 
+		
+		
+		$tab = array();
+		$i = 0;
+		// on range les résultats dans un tableau
+		while($cell =$mail->fetch()) {
+			$tab[$i] = $cell['email'];
+			$i++;
+		}
+		/* 	on a terminé alors on ferme le curseur */
+		$mail->closeCursor();
+		/* on retourne toutes les catégories */
+		return $tab;
+	} catch (Exception $err) {
+		echo "Erreur il est impossible de récupérer les email" ;
+	}
+}
+
+/*
+ * permet de récupérer les email dans la BD pour la modification des utilisateurs
+ */
+function recupererNom() {
+	try {
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		/* exécution d'une requete */
+		$nom=$bdd->query("SELECT nom FROM compte"); // on va chercher tous les membres de la table 
+		
+		
+		$tab = array();
+		$i = 0;
+		// on range les résultats dans un tableau
+		while($cell =$nom->fetch()) {
+			$tab[$i] = $cell['nom'];
+			$i++;
+		}
+		/* 	on a terminé alors on ferme le curseur */
+		$nom->closeCursor();
+		/* on retourne toutes les catégories */
+		return $tab;
+	} catch (Exception $err) {
+		echo "Erreur il est impossible de récupérer les noms" ;
+	}
+}
+
+/*
+ * permet de récupérer les email dans la BD pour la modification des utilisateurs
+ */
+function recupererPrenom() {
+	try {
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		/* exécution d'une requete */
+		$prenom=$bdd->query("SELECT prenom FROM compte"); // on va chercher tous les membres de la table 
+		
+		
+		$tab = array();
+		$i = 0;
+		// on range les résultats dans un tableau
+		while($cell =$prenom->fetch()) {
+			$tab[$i] = $cell['prenom'];
+			$i++;
+		}
+		/* 	on a terminé alors on ferme le curseur */
+		$prenom->closeCursor();
+		/* on retourne toutes les catégories */
+		return $tab;
+	} catch (Exception $err) {
+		echo "Erreur il est impossible de récupérer les noms" ;
+	}
+}
+
+/*
+ * permet de récupérer les email dans la BD pour la modification des utilisateurs
+ */
+function recupererPassword() {
+	try {
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		/* exécution d'une requete */
+		$password=$bdd->query("SELECT password FROM compte"); // on va chercher tous les membres de la table 
+		
+		
+		$tab = array();
+		$i = 0;
+		// on range les résultats dans un tableau
+		while($cell =$password->fetch()) {
+			$tab[$i] = $cell['password'];
+			$i++;
+		}
+		/* 	on a terminé alors on ferme le curseur */
+		$password->closeCursor();
+		/* on retourne toutes les catégories */
+		return $tab;
+	} catch (Exception $err) {
+		echo "Erreur il est impossible de récupérer les noms" ;
+	}
+}
+
+/*
+ * permet de récupérer toutes les info des utilisateurs
+ */
+function recupererUtils() {
+	try {
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		/* exécution d'une requete */
+		$utils = $bdd->query("SELECT * FROM compte"); // on va chercher tous les membres de la table 
+		
+		$tab = array();
+		// on range les résultats dans un tableau
+		while($util =$utils->fetch()) {
+			$tab[] = $util;
+		}
+		/* 	on a terminé alors on ferme le curseur */
+		$utils->closeCursor();
+		/* on retourne toutes les catégories */
+		return $tab;
+		
+	} catch (Exception $err) {
+		echo "Erreur il est impossible de récupérer les noms" ;
+	}
+    
+    return null;
+}
+
+function recupererUtil($id) {
+    $utils = recupererUtils();
+    
+    foreach ($utils as $util) {
+        if ($util['idCompte'] === $id) return $util;
+    }
+
+    return null;
+}
+
+/*
+ * permet d'ajouter un nouvel utilisateur dans la BD
+ */
+function ajoutUtil($nom, $prenom, $email, $mdp) {
+	
+	// controle si les valeurs sont nulles ou non
+	if(empty($_POST['nom']) && empty($_POST['prenom']) && empty($_POST['email']) && empty($_POST['mdp'])) {
+		return false;
+	}
+	try { 
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		// insertion des valeurs dans la bd
+		$rqt = $bdd->prepare("INSERT INTO compte VALUES (NULL, :nom, :prenom, :email, :mdp)");
+		$rqt->bindParam(':nom', $nom);
+		$rqt->bindParam(':prenom', $prenom);
+		$rqt->bindParam(':email', $email);
+		$rqt->bindParam(':mdp', $mdp);
+		
+		// exécution de la requete
+		$rqt->execute();
+		
+		return true;
+		
+	} catch (Exception $err) {
+		//echo "Erreur il est impossible d'ajouter un nouvel utilisateur";
+	}
+	
+	return false;
+}
+
+/*
+ * permet de supprimer un utilisateur dans la BD
+ */
+function supprUtil($idUtil) {
+	try { 
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		// suppression des valeurs dans la bd
+		$rqt = $bdd->prepare("DELETE FROM compte WHERE idCompte = :id");
+		$rqt->bindParam(':id', $idUtil);
+		
+		// exécution de la requete
+		$rqt->execute();
+		
+		return true;
+		
+	} catch (Exception $err) {
+		//echo "Erreur il est impossible de supprimer l'utilisateur";
+	}
+	
+	return false;	
+}
+
+function modifUtil($id, $nom, $prenom, $email){
+    try { 
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		// modification des valeurs dans la bd
+		$rqt = $bdd->prepare("UPDATE compte SET nom = :nom, prenom = :prenom, email = :email "
+                            ."WHERE idCompte = :id");
+		$rqt->bindParam(':id', $id);
+		$rqt->bindParam(':nom', $nom);
+		$rqt->bindParam(':prenom', $prenom);
+		$rqt->bindParam(':email', $email);
+		
+		// exécution de la requete
+		$rqt->execute();
+		
+		return true;
+		
+	} catch (Exception $err) {
+		//echo "Erreur il est impossible de modifier l'utilisateur";
+	}
+	
+	return false;	
+}
 ?>	
