@@ -791,117 +791,6 @@ function recupEmail() {
 
 }
 
-/*
- * permet de récupérer les email dans la BD pour la modification des utilisateurs
- */
-function recupererMail() {
-	try {
-		// connexion à la bd
-		$bdd = connectBD();
-		
-		/* exécution d'une requete */
-		$mail=$bdd->query("SELECT email FROM compte"); // on va chercher tous les membres de la table 
-		
-		
-		$tab = array();
-		$i = 0;
-		// on range les résultats dans un tableau
-		while($cell =$mail->fetch()) {
-			$tab[$i] = $cell['email'];
-			$i++;
-		}
-		/* 	on a terminé alors on ferme le curseur */
-		$mail->closeCursor();
-		/* on retourne toutes les catégories */
-		return $tab;
-	} catch (Exception $err) {
-		echo "Erreur il est impossible de récupérer les email" ;
-	}
-}
-
-/*
- * permet de récupérer les email dans la BD pour la modification des utilisateurs
- */
-function recupererNom() {
-	try {
-		// connexion à la bd
-		$bdd = connectBD();
-		
-		/* exécution d'une requete */
-		$nom=$bdd->query("SELECT nom FROM compte"); // on va chercher tous les membres de la table 
-		
-		
-		$tab = array();
-		$i = 0;
-		// on range les résultats dans un tableau
-		while($cell =$nom->fetch()) {
-			$tab[$i] = $cell['nom'];
-			$i++;
-		}
-		/* 	on a terminé alors on ferme le curseur */
-		$nom->closeCursor();
-		/* on retourne toutes les catégories */
-		return $tab;
-	} catch (Exception $err) {
-		echo "Erreur il est impossible de récupérer les noms" ;
-	}
-}
-
-/*
- * permet de récupérer les email dans la BD pour la modification des utilisateurs
- */
-function recupererPrenom() {
-	try {
-		// connexion à la bd
-		$bdd = connectBD();
-		
-		/* exécution d'une requete */
-		$prenom=$bdd->query("SELECT prenom FROM compte"); // on va chercher tous les membres de la table 
-		
-		
-		$tab = array();
-		$i = 0;
-		// on range les résultats dans un tableau
-		while($cell =$prenom->fetch()) {
-			$tab[$i] = $cell['prenom'];
-			$i++;
-		}
-		/* 	on a terminé alors on ferme le curseur */
-		$prenom->closeCursor();
-		/* on retourne toutes les catégories */
-		return $tab;
-	} catch (Exception $err) {
-		echo "Erreur il est impossible de récupérer les noms" ;
-	}
-}
-
-/*
- * permet de récupérer les email dans la BD pour la modification des utilisateurs
- */
-function recupererPassword() {
-	try {
-		// connexion à la bd
-		$bdd = connectBD();
-		
-		/* exécution d'une requete */
-		$password=$bdd->query("SELECT password FROM compte"); // on va chercher tous les membres de la table 
-		
-		
-		$tab = array();
-		$i = 0;
-		// on range les résultats dans un tableau
-		while($cell =$password->fetch()) {
-			$tab[$i] = $cell['password'];
-			$i++;
-		}
-		/* 	on a terminé alors on ferme le curseur */
-		$password->closeCursor();
-		/* on retourne toutes les catégories */
-		return $tab;
-	} catch (Exception $err) {
-		echo "Erreur il est impossible de récupérer les noms" ;
-	}
-}
 
 /*
  * permet de récupérer toutes les info des utilisateurs
@@ -931,6 +820,9 @@ function recupererUtils() {
     return null;
 }
 
+/*
+ * permet de récupérer toutes les info d'un utilisateur
+ */
 function recupererUtil($id) {
     $utils = recupererUtils();
     
@@ -997,6 +889,9 @@ function supprUtil($idUtil) {
 	return false;	
 }
 
+/*
+ * permet de modifier les infos d'un utilisateur dans la BD
+ */
 function modifUtil($id, $nom, $prenom, $email){
     try { 
 		// connexion à la bd
@@ -1020,5 +915,60 @@ function modifUtil($id, $nom, $prenom, $email){
 	}
 	
 	return false;	
+}
+
+/*
+ * permet de supprimer une équipe dans la BD
+ */
+function supprEquipe($idEquipe) {
+	try { 
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		// suppression des valeurs dans la bd
+		$rqt = $bdd->prepare("DELETE FROM equipe WHERE idEquipe = :id");
+		$rqt->bindParam(':id', $idEquipe);
+		
+		// exécution de la requete
+		$rqt->execute();
+		
+		return true;
+		
+	} catch (Exception $err) {
+		//echo "Erreur il est impossible de supprimer l'utilisateur";
+	}
+	
+	return false;	
+}
+
+/*
+ * permet d'ajouter une nouvelle équipe dans la BD
+ */
+function ajoutEquipe($numEtablissement, $numCategorie, $numSport) {
+	
+	// controle si les valeurs sont nulles ou non
+	if(empty($_POST['numEtablissement']) && empty($_POST['numCategorie']) && empty($_POST['numSport'])) {
+		return false;
+	}
+	try { 
+		// connexion à la bd
+		$bdd = connectBD();
+		
+		// insertion des valeurs dans la bd
+		$rqt = $bdd->prepare("INSERT INTO equipe VALUES (NULL, :numEtablissement, :numCategorie, :numSport)");
+		$rqt->bindParam(':numEtablissement', $numEtablissement);
+		$rqt->bindParam(':numCategorie', $numCategorie);
+		$rqt->bindParam(':numSport', $numSport);
+		
+		// exécution de la requete
+		$rqt->execute();
+		
+		return true;
+		
+	} catch (Exception $err) {
+		//echo "Erreur il est impossible d'ajouter un nouvel utilisateur";
+	}
+	
+	return false;
 }
 ?>	
