@@ -6,7 +6,7 @@ if(isset($_SESSION['idCompte'])) {
 <html id="page">
     <head>
         <!-- nom de la page -->
-        <TITLE>Espace utilisateur</TITLE>
+        <TITLE>Espace planning</TITLE>
         <meta charset="utf-8" />
 
         <!-- permet de forcer le déréférencement -->
@@ -30,30 +30,24 @@ if(isset($_SESSION['idCompte'])) {
             <!-- Première ligne -->
             <div class="row center">
                 <!-- Titre de la page -->
-                <h1 class="center" id="titre">Espace utilisateur</h1>
+                <h1 class="center" id="titre">Espace planning</h1>
             </div>
             <!-- Deuxieme ligne -->
             <div class="row center ">
                 <div class="col m4 s12">
                             
                     <!-- lien page pour ajouter un utilisateur -->
-                    <a  href="utilisateur_ajout.php" id="button_modifier" class="waves-effect waves-light btn btnLarge">
-                                <i class="material-icons left">person_add</i>Ajouter utilisateur
+                    <a  href="#" id="button_créer" class="waves-effect waves-light btn btnLarge">
+                                <i class="material-icons left">add_circle</i>Créer planning
                     </a>
                 </div>	
                 <div class="col m4 s12">	
                     <!-- lien page pour modifier un utilisateur -->
-                    <a  href="utilisateur_choix.php" id="button_modifier" class="waves-effect waves-light btn btnLarge">
-                                <i class="material-icons left">edit</i>Modifier utilisateur
+                    <a  href="#" id="button_consulter" class="waves-effect waves-light btn btnLarge">
+                                <i class="material-icons left"></i>Consulter planning
                     </a>
                     
                 </div>
-                <div class="col m4 s12">
-                    <!-- lien page pour supprimer un utilisateur -->					
-                    <a  href="utilisateur_choix.php" id="button_modifier" class="waves-effect waves-light btn btnLarge">
-                                <i class="material-icons left">delete</i>Supprimer utilisateur
-                    </a>
-                </div>		
             </div>
                         
         </div>
